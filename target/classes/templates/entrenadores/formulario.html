@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario Entrenador</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+        .navbar { background: #1a237e; }
+        .navbar-brand, .nav-link { color: #FFD600 !important; font-weight: 600; }
+        .nav-link:hover { color: #fff !important; }
+        .card { border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 10px; }
+        .card-header { background: #1a237e; color: white; border-radius: 10px 10px 0 0 !important; }
+        .btn-guardar { background: #1a237e; color: white; }
+        .btn-guardar:hover { background: #283593; color: white; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="/"> Equipo Fútbol</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/asociaciones}">Asociaciones</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/clubes}">Clubes</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/competiciones}">Competiciones</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/entrenadores}">Entrenadores</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/jugadores}">Jugadores</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header py-3">
+                    <h5 class="mb-0" th:text="${entrenador.id == null ? 'Nuevo Entrenador' : 'Editar Entrenador'}"></h5>
+                </div>
+                <div class="card-body p-4">
+                    <form th:action="@{/entrenadores/guardar}" method="post" th:object="${entrenador}">
+                        <input type="hidden" th:field="*{id}">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Nombre</label>
+                            <input type="text" class="form-control" th:field="*{nombre}" placeholder="Ej: José" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Apellido</label>
+                            <input type="text" class="form-control" th:field="*{apellido}" placeholder="Ej: Pékerman" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Edad</label>
+                            <input type="number" class="form-control" th:field="*{edad}" placeholder="Ej: 65" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Nacionalidad</label>
+                            <input type="text" class="form-control" th:field="*{nacionalidad}" placeholder="Ej: Argentina" required>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-guardar px-4">Guardar</button>
+                            <a th:href="@{/entrenadores}" class="btn btn-secondary px-4">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
