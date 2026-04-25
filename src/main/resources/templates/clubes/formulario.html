@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario Club</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+        .navbar { background: #1a237e; }
+        .navbar-brand, .nav-link { color: #FFD600 !important; font-weight: 600; }
+        .nav-link:hover { color: #fff !important; }
+        .card { border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 10px; }
+        .card-header { background: #1a237e; color: white; border-radius: 10px 10px 0 0 !important; }
+        .btn-guardar { background: #1a237e; color: white; }
+        .btn-guardar:hover { background: #283593; color: white; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="/">⚽ Equipo Fútbol Colombia</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/asociaciones}">Asociaciones</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/clubes}">Clubes</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/competiciones}">Competiciones</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/entrenadores}">Entrenadores</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/jugadores}">Jugadores</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header py-3">
+                    <h5 class="mb-0" th:text="${club.id == null ? 'Nuevo Club' : 'Editar Club'}"></h5>
+                </div>
+                <div class="card-body p-4">
+                    <form th:action="@{/clubes/guardar}" method="post" th:object="${club}">
+                        <input type="hidden" th:field="*{id}">
+
+                        <!-- Nombre -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Nombre</label>
+                            <input type="text" class="form-control" th:field="*{nombre}"
+                                   placeholder="Ej: Atlético Bucaramanga" required>
+                        </div>
+
+                        <!-- Ubicación -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Ubicación</label>
+                            <input type="text" class="form-control" th:field="*{ubicacion}"
+                                   placeholder="Ej: Bucaramanga, Colombia">
+                        </div>
+
+                        <!-- Estadio -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Estadio</label>
+                            <input type="text" class="form-control" th:field="*{estadio}"
+                                   placeholder="Ej: Alfonso López">
+                        </div>
+
+                        <!-- Año Fundación y Número Jugadores -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Año de Fundación</label>
+                                <input type="number" class="form-control" th:field="*{anioFundacion}"
+                                       placeholder="Ej: 1949">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Número de Jugadores</label>
+                                <input type="number" class="form-control" th:field="*{numeroJugadores}"
+                                       placeholder="Ej: 25">
+                            </div>
+                        </div>
+
+                        <!-- Asociación -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Asociación</label>
+                            <select class="form-select" name="asociacionId">
+                                <option value="">-- Seleccionar Asociación --</option>
+                                <option th:each="aso : ${asociaciones}"
+                                        th:value="${aso.id}"
+                                        th:text="${aso.nombre}"
+                                        th:selected="${club.asociacion != null and club.asociacion.id == aso.id}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Entrenador -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Entrenador</label>
+                            <select class="form-select" name="entrenadorId">
+                                <option value="">-- Seleccionar Entrenador --</option>
+                                <option th:each="ent : ${entrenadores}"
+                                        th:value="${ent.id}"
+                                        th:text="${ent.nombre + ' ' + ent.apellido}"
+                                        th:selected="${club.entrenador != null and club.entrenador.id == ent.id}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- ✅ Competición: select simple, una sola opción -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Competición</label>
+                            <select class="form-select" name="competicionesIds">
+                                <option value="">-- Seleccionar Competición --</option>
+                                <option th:each="comp : ${competiciones}"
+                                        th:value="${comp.id}"
+                                        th:text="${comp.nombre}"
+                                        th:selected="${club.competiciones != null and
+                                                       not #lists.isEmpty(club.competiciones) and
+                                                       club.competiciones[0].id == comp.id}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex gap-2 mt-3">
+                            <button type="submit" class="btn btn-guardar px-4">Guardar</button>
+                            <a th:href="@{/clubes}" class="btn btn-secondary px-4">Cancelar</a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
